@@ -1,0 +1,7 @@
+syntax = "proto3";
+option go_package = "./;proto";
+
+message Common {
+	string contry = 1;
+	string city = 2;
+}

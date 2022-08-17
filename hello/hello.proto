@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "./;proto";
+
+import "common.proto";
+
+service SrvInterface {
+	rpc Hello(Request) returns (Response) {}
+}
+
+message Request {
+	string name = 1;
+	Common common = 2;
+}
+
+message Response {
+	string msg = 1;
+}
+
