@@ -36,7 +36,8 @@ func NewSrvInterfaceEndpoints() []*api.Endpoint {
 // Client API for SrvInterface service
 
 type SrvInterfaceService interface {
-	Hello(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	Ping(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	GetInfo(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 }
 
 type srvInterfaceService struct {
@@ -51,8 +52,18 @@ func NewSrvInterfaceService(name string, c client.Client) SrvInterfaceService {
 	}
 }
 
-func (c *srvInterfaceService) Hello(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "SrvInterface.Hello", in)
+func (c *srvInterfaceService) Ping(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "SrvInterface.Ping", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *srvInterfaceService) GetInfo(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "SrvInterface.GetInfo", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -64,12 +75,14 @@ func (c *srvInterfaceService) Hello(ctx context.Context, in *Request, opts ...cl
 // Server API for SrvInterface service
 
 type SrvInterfaceHandler interface {
-	Hello(context.Context, *Request, *Response) error
+	Ping(context.Context, *Request, *Response) error
+	GetInfo(context.Context, *Request, *Response) error
 }
 
 func RegisterSrvInterfaceHandler(s server.Server, hdlr SrvInterfaceHandler, opts ...server.HandlerOption) error {
 	type srvInterface interface {
-		Hello(ctx context.Context, in *Request, out *Response) error
+		Ping(ctx context.Context, in *Request, out *Response) error
+		GetInfo(ctx context.Context, in *Request, out *Response) error
 	}
 	type SrvInterface struct {
 		srvInterface
@@ -82,6 +95,10 @@ type srvInterfaceHandler struct {
 	SrvInterfaceHandler
 }
 
-func (h *srvInterfaceHandler) Hello(ctx context.Context, in *Request, out *Response) error {
-	return h.SrvInterfaceHandler.Hello(ctx, in, out)
+func (h *srvInterfaceHandler) Ping(ctx context.Context, in *Request, out *Response) error {
+	return h.SrvInterfaceHandler.Ping(ctx, in, out)
+}
+
+func (h *srvInterfaceHandler) GetInfo(ctx context.Context, in *Request, out *Response) error {
+	return h.SrvInterfaceHandler.GetInfo(ctx, in, out)
 }

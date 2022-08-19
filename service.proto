@@ -4,12 +4,14 @@ option go_package = "./;proto";
 import "common.proto";
 
 service SrvInterface {
-	rpc Hello(Request) returns (Response) {}
+	rpc Ping(Request) returns (Response) {}
+	rpc GetInfo(Request) returns (Response) {}
 }
 
 message Request {
-	string name = 1;
-	Common common = 2;
+	Common common = 1;
+	string name = 2;
+	int64 size = 3;
 }
 
 message Response {
